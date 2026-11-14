@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#071a3d">
+<title>Sindhi AI Assistant</title>
+<style>
+:root{--navy:#071a3d;--blue:#0756c9;--gold:#ffd447;--cream:#fffaf0;--ink:#102347}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,"Noto Sans",sans-serif;background:linear-gradient(135deg,#06132f,#0a3470);color:white;min-height:100vh}
+.app{max-width:480px;min-height:100vh;margin:auto;background:var(--navy);display:flex;flex-direction:column;box-shadow:0 0 35px #0008;position:relative;overflow:hidden}
+header{height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:#061633;border-bottom:1px solid #24569b;position:relative;z-index:2}
+.menu{font-size:27px;cursor:pointer;border:0;background:none;color:white}
+.brand{font-size:20px;font-weight:800;letter-spacing:.2px}
+.pro{color:var(--gold);font-weight:bold}
+.hero{min-height:235px;padding:24px 20px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(0deg,#061a3deF,#061a3d10),url('https://images.unsplash.com/photo-1589307357647-7f7b1c2e9b4c?auto=format&fit=crop&w=1000&q=80') center/cover}
+.robot{font-size:58px;line-height:1;margin-bottom:10px}
+.greeting{font-size:26px;font-weight:800;margin:0 0 8px}
+.greeting span{display:block;font-size:18px;font-weight:500;margin-top:8px}
+.panel{background:var(--cream);color:var(--ink);border-radius:25px 25px 0 0;padding:22px 17px 16px;flex:1}
+.panel h2{text-align:center;font-size:20px;margin:0 0 7px}
+.sindhi{text-align:center;font-size:17px;margin:0 0 18px;line-height:1.7}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{min-height:82px;border:1px solid #b6c5dc;border-radius:17px;background:#fff;display:flex;align-items:center;gap:12px;padding:12px;color:#102c5c;font-size:16px;font-weight:700;cursor:pointer;text-align:left}
+.tile:active{transform:scale(.98)}
+.icon{font-size:30px;color:#0756c9;min-width:38px;text-align:center}
+.chat{display:none;flex-direction:column;gap:12px;padding:18px 15px;min-height:230px;max-height:48vh;overflow:auto;background:#f7f8fc;color:#15264a}
+.bubble{padding:12px 15px;border-radius:17px;max-width:88%;line-height:1.5}
+.bot{background:white;align-self:flex-start;border:1px solid #d8e0ee}
+.user{background:#dceaff;align-self:flex-end}
+.composer{display:flex;align-items:center;gap:9px;background:white;border-radius:40px;padding:7px 8px;margin-top:18px;border:1px solid #cad6e8}
+.composer input{border:0;outline:0;flex:1;min-width:0;font-size:16px;padding:10px;color:#102347}
+.send{border:0;background:#0756d5;color:white;border-radius:50%;width:48px;height:48px;font-size:21px;cursor:pointer}
+nav{height:70px;background:#04132d;display:flex;justify-content:space-around;align-items:center}
+nav button{border:0;background:none;color:#a9c3ed;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+nav b{font-size:22px}
+nav button.active{color:#18a8ff}
+.drawer{position:absolute;z-index:5;top:66px;bottom:70px;left:0;width:78%;max-width:310px;background:#071a3d;box-shadow:8px 0 25px #0008;padding:22px 18px;transform:translateX(-110%);transition:.25s}
+.drawer.open{transform:translateX(0)}
+.drawer h2{color:var(--gold);margin-top:0}
+.drawer button{width:100%;padding:15px;margin:5px 0;border:1px solid #28579b;border-radius:25px;background:transparent;color:white;text-align:left;font-size:16px}
+.tagline{text-align:center;color:var(--gold);font-style:italic;margin-top:22px}
+@media(min-width:700px){body{padding:22px}.app{border-radius:28px;min-height:calc(100vh - 44px)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<button class="menu" aria-label="Open menu" onclick="toggleDrawer()">☰</button>
+<div class="brand">Sindhi AI Assistant</div>
+<div class="pro">♛ Pro</div>
+</header>
+<aside class="drawer" id="drawer">
+<h2>Sindhi AI Assistant</h2>
+<button onclick="newChat()">✉️ &nbsp; New Chat</button>
+<button onclick="showMessage('Chat history will appear here.')">◷ &nbsp; Chat History</button>
+<button onclick="showMessage('Your favorites will appear here.')">★ &nbsp; Favorites</button>
+<button onclick="showMessage('Settings are coming soon.')">⚙️ &nbsp; Settings</button>
+<button onclick="showMessage('Sindhi AI Assistant — your smart Sindhi AI friend.')">ⓘ &nbsp; About App</button>
+<button onclick="shareApp()">↗ &nbsp; Share App</button>
+<div class="tagline">“Sindhi Boli, Sindhi Pehchaan”</div>
+</aside>
+<section class="hero">
+<div class="robot">🤖</div>
+<p class="greeting">سلام!<span>مان سنڌي AI اسسٽنٽ آهيان</span></p>
+</section>
+<section class="panel">
+<h2>What would you like to know?</h2>
+<p class="sindhi" lang="sd" dir="rtl">توهان ڪهڙي سوال پڇڻ چاهيو ٿا؟</p>
+<div class="grid">
+<button class="tile" onclick="chooseLanguage('Sindhi')"><span class="icon">☰</span>Chat in<br>Sindhi</button>
+<button class="tile" onclick="chooseLanguage('Urdu')"><span class="icon">◎</span>Chat in<br>Urdu</button>
+<button class="tile" onclick="chooseLanguage('Roman Sindhi')"><span class="icon">文</span>Roman Sindhi<br>Support</button>
+<button class="tile" onclick="chooseLanguage('General Knowledge')"><span class="icon">▤</span>General<br>Knowledge</button>
+</div>
+<div class="chat" id="chat">
+<div class="bubble bot">سلام! مان سنڌي AI Assistant آهيان. توهان جي ڪهڙي مدد ڪري سگهان ٿو؟</div>
+</div>
+<div class="composer">
+<input id="message" type="text" placeholder="Type your message..." onkeydown="if(event.key==='Enter')sendMessage()">
+<button class="send" onclick="sendMessage()" aria-label="Send">➤</button>
+</div>
+</section>
+<nav>
+<button class="active" onclick="newChat()"><b>⌂</b>Home</button>
+<button onclick="showMessage('Discover helpful topics and learn more.')"><b>♧</b>Discover</button>
+<button onclick="showMessage('Profile settings coming soon.')"><b>●</b>Profile</button>
+</nav>
+</div>
+<script>
+const chat=document.getElementById('chat');
+function toggleDrawer(){document.getElementById('drawer').classList.toggle('open')}
+function showMessage(text){toggleDrawer();chat.style.display='flex';chat.innerHTML='';addBubble(text,'bot')}
+function addBubble(text,kind){const el=document.createElement('div');el.className='bubble '+kind;el.textContent=text;chat.appendChild(el);chat.scrollTop=chat.scrollHeight}
+function chooseLanguage(lang){chat.style.display='flex';addBubble('Selected: '+lang+'. پنهنجو سوال لکو / Type your question below.','bot');document.getElementById('message').focus()}
+function newChat(){chat.style.display='flex';chat.innerHTML='';addBubble('سلام! مان سنڌي AI Assistant آهيان. توهان جي ڪهڙي مدد ڪري سگهان ٿو؟','bot');document.getElementById('drawer').classList.remove('open')}
+function sendMessage(){const input=document.getElementById('message');const value=input.value.trim();if(!value)return;chat.style.display='flex';addBubble(value,'user');input.value='';setTimeout(()=>addBubble('توهان جو پيغام ملي ويو. حقيقي AI جوابن لاءِ هن ڊيمو کي AI backend سان ڳنڍڻو پوندو.','bot'),500)}
+function shareApp(){if(navigator.share){navigator.share({title:'Sindhi AI Assistant',text:'Try Sindhi AI Assistant!'})}else{showMessage('Sindhi AI Assistant — share this page link with friends.')}}
+</script>
+</body>
+</html>
